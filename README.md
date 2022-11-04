@@ -21,3 +21,4 @@ Marcelo Mauricio S. da Silva - marcelomauricio@hotmail.com - 81 971050773
 
 #Atenção
 Valores válidos para votação ( SIM e NAO) SEM ~
+Projeto sem tratamento de erro com a classe HttpExceptionHandler!
