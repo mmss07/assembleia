@@ -6,6 +6,7 @@ import com.dbc.assembleia.models.Pauta;
 import com.dbc.assembleia.models.SessaoVotacao;
 import com.dbc.assembleia.repository.SessaoVotacaoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SessaoVotacaoService {
@@ -24,6 +26,7 @@ public class SessaoVotacaoService {
     private final VotoSessaoService votoSessaoService;
 
     public void save(SessaoVotacaoRequestDTO sessaoVotacaoDTO) {
+        log.info("SessaoVotacaoService ::  save :: start");
         final var pauta = Optional.ofNullable(pautaService.getPautaById(sessaoVotacaoDTO.getIdPauta()));
         if (pauta.isPresent()) {
             var sessaoVotacao = SessaoVotacao.builder()
@@ -34,11 +37,12 @@ public class SessaoVotacaoService {
                     .build();
             sessaoVotacaoRepository.save(sessaoVotacao);
         }
-
+        log.info("SessaoVotacaoService ::  save :: end");
 
     }
 
     public List<SessaoVotacaoResponseDTO> getAllSessoes() {
+        log.info("SessaoVotacaoService ::  getAllSessoes");
         var sessaoVotacaoList = sessaoVotacaoRepository.findAll();
         return sessaoVotacaoList.stream()
                 .map(x -> {
@@ -57,6 +61,7 @@ public class SessaoVotacaoService {
     }
 
     public  SessaoVotacaoResponseDTO getSessaoVotacaoResponseDTO(Long id) {
+        log.info("SessaoVotacaoService ::  getSessaoVotacaoResponseDTO :: id = {}", id);
         var byId = sessaoVotacaoRepository.findById(id);
         if (byId.isPresent()){
             final var sessao = modelMapper.map(byId.get(), SessaoVotacaoResponseDTO.class);

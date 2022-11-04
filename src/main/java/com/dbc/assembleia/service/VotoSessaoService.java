@@ -8,12 +8,13 @@ import com.dbc.assembleia.repository.SessaoVotacaoRepository;
 import com.dbc.assembleia.repository.VotoSessaoRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VotoSessaoService {
@@ -21,9 +22,9 @@ public class VotoSessaoService {
     private final VotoSessaoRepository votoSessaoRepository;
     private final SessaoVotacaoRepository sessaoVotacaoRepository;
     private final ModelMapper modelMapper;
-    //private final ValidaCpfService validaCpfService;
 
     public VotoSessaoResponseDTO save(VotoSessaoRequestDTO votoSessaoRequestDTO) {
+        log.info("VotoSessaoService ::  save :: cpf = {}", votoSessaoRequestDTO.getCpf());
         final var sessaoVotacao = sessaoVotacaoRepository.findById(votoSessaoRequestDTO.getIdSessaoVotacao());
         if (sessaoVotacao.isPresent() && validaVoto(votoSessaoRequestDTO, sessaoVotacao.get())) {
             return modelMapper.map(votoSessaoRepository.save(VotoSessao.builder()
@@ -36,29 +37,21 @@ public class VotoSessaoService {
     }
 
     public long getTotalVotosByIdSessaoSIM(Long idSessaoVoto) {
+        log.info("VotoSessaoService ::  getTotalVotosByIdSessaoSIM :: idSessaoVoto = {}", idSessaoVoto);
         return  votoSessaoRepository.findByIdSessaoVotacao(idSessaoVoto).stream().filter(x -> x.getVoto().equals("SIM")).count();
     }
 
     public long getTotalVotosByIdSessaoNAO(Long idSessaoVoto) {
+        log.info("VotoSessaoService ::  getTotalVotosByIdSessaoNAO :: idSessaoVoto = {}", idSessaoVoto);
         return  votoSessaoRepository.findByIdSessaoVotacao(idSessaoVoto).stream().filter(x -> x.getVoto().equals("NAO")).count();
     }
 
     private boolean validaVoto(VotoSessaoRequestDTO votoSessaoRequestDTO, SessaoVotacao sessaoVotacao) {
+        log.info("VotoSessaoService ::  validaVoto :: cpf = {}", votoSessaoRequestDTO.getCpf());
         return (((LocalDateTime.now().isBefore(sessaoVotacao.getDataHoraFechamento()))
                 || (LocalDateTime.now().isEqual(sessaoVotacao.getDataHoraFechamento())))
                 && (LocalDateTime.now().isAfter(sessaoVotacao.getDataHoraAbertura()))
                 && (votoSessaoRepository.findByCpfAndIdSessaoVotacao(votoSessaoRequestDTO.getCpf(), votoSessaoRequestDTO.getIdSessaoVotacao()) == null));
-    }
-
-    private boolean validaCpf(String cpf) {
-        try {
-//            final var s = validaCpfService.validaCpf(cpf);
-//            if (s.equals(StatusCpfEnum.ABLE_TO_VOTE))
-            return true;
-        } catch (FeignException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 }
