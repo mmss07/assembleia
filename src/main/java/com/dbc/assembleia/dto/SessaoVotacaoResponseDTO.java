@@ -36,12 +36,12 @@ public class SessaoVotacaoResponseDTO {
     @ApiModelProperty(notes = "Tempo da sessão de votação informado na abertura da mesma! Caso não tenha sido informado será terá o valor default de 1 minuto!",
             example = "1")
     @JsonProperty("data_hora_abertura")
-    private LocalDateTime dataHoraAbertura;
+    private String dataHoraAbertura;
 
     @ApiModelProperty(notes = "Tempo da sessão de votação informado na abertura da mesma! Caso não tenha sido informado será terá o valor default de 1 minuto!",
             example = "1")
     @JsonProperty("data_hora_fechamento")
-    private LocalDateTime dataHoraFechamento;
+    private String dataHoraFechamento;
 
     @ApiModelProperty(notes = "Total de votos recebidos - SIM",
             example = "1")
@@ -50,7 +50,7 @@ public class SessaoVotacaoResponseDTO {
 
     @ApiModelProperty(notes = "Total de votos recebidos - NÃO",
             example = "1")
-    @JsonProperty("total_votos_sim")
+    @JsonProperty("total_votos_nao")
     private long totalVotosNao;
 
 

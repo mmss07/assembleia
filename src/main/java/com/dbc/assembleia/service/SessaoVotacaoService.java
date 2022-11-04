@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,8 +25,10 @@ public class SessaoVotacaoService {
     private final PautaService pautaService;
     private final ModelMapper modelMapper;
     private final VotoSessaoService votoSessaoService;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    public void save(SessaoVotacaoRequestDTO sessaoVotacaoDTO) {
+    public SessaoVotacaoResponseDTO save(SessaoVotacaoRequestDTO sessaoVotacaoDTO) {
+
         log.info("SessaoVotacaoService ::  save :: start");
         final var pauta = Optional.ofNullable(pautaService.getPautaById(sessaoVotacaoDTO.getIdPauta()));
         if (pauta.isPresent()) {
@@ -35,10 +38,16 @@ public class SessaoVotacaoService {
                     .pauta(pauta.get())
                     .tempo((sessaoVotacaoDTO.getTempo() == 0L) ? 1 : sessaoVotacaoDTO.getTempo())
                     .build();
-            sessaoVotacaoRepository.save(sessaoVotacao);
+            final var sessao = sessaoVotacaoRepository.save(sessaoVotacao);
+            return SessaoVotacaoResponseDTO.builder().idSessaoVotacao(sessao.getIdSessaoVotacao())
+                    .tempo(sessao.getTempo())
+                    .idPauta(sessao.getPauta().getIdPauta())
+                    .dataHoraAbertura(sessao.getDataHoraAbertura().format(formatter).toString())
+                    .dataHoraFechamento(sessao.getDataHoraFechamento().format(formatter).toString())
+                    .build();
         }
         log.info("SessaoVotacaoService ::  save :: end");
-
+        return SessaoVotacaoResponseDTO.builder().build();
     }
 
     public List<SessaoVotacaoResponseDTO> getAllSessoes() {
@@ -51,8 +60,8 @@ public class SessaoVotacaoService {
                     return SessaoVotacaoResponseDTO.builder()
                             .idSessaoVotacao(x.getIdSessaoVotacao())
                             .idPauta(x.getPauta().getIdPauta())
-                            .dataHoraAbertura(x.getDataHoraAbertura())
-                            .dataHoraFechamento(x.getDataHoraFechamento())
+                            .dataHoraAbertura(x.getDataHoraAbertura().format(formatter).toString())
+                            .dataHoraFechamento(x.getDataHoraFechamento().format(formatter).toString())
                             .tempo(x.getTempo())
                             .totalVotosSim(totalVotosSim.orElse(0L))
                             .totalVotosNao(totalVotosNao.orElse(0L))

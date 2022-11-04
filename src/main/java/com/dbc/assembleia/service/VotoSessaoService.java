@@ -51,7 +51,11 @@ public class VotoSessaoService {
         return (((LocalDateTime.now().isBefore(sessaoVotacao.getDataHoraFechamento()))
                 || (LocalDateTime.now().isEqual(sessaoVotacao.getDataHoraFechamento())))
                 && (LocalDateTime.now().isAfter(sessaoVotacao.getDataHoraAbertura()))
-                && (votoSessaoRepository.findByCpfAndIdSessaoVotacao(votoSessaoRequestDTO.getCpf(), votoSessaoRequestDTO.getIdSessaoVotacao()) == null));
+                && validaVotoRepetido(votoSessaoRequestDTO));
+    }
+
+    private boolean validaVotoRepetido(VotoSessaoRequestDTO votoSessaoRequestDTO) {
+        return votoSessaoRepository.findByCpfAndIdSessaoVotacao(votoSessaoRequestDTO.getCpf(), votoSessaoRequestDTO.getIdSessaoVotacao()) == null;
     }
 
 }

@@ -29,9 +29,9 @@ public class SessaoVotacaoControler {
 
     @PostMapping("/sessao")
     @ApiOperation(value = "Insere uma nova sessão de votação")
-    public ResponseEntity<Void> saveSessao(@RequestBody SessaoVotacaoRequestDTO SessaoVotacaoDTO) {
-        sessaoVotacaoService.save(SessaoVotacaoDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<SessaoVotacaoResponseDTO> saveSessao(@RequestBody SessaoVotacaoRequestDTO SessaoVotacaoDTO) {
+        final var sessao = sessaoVotacaoService.save(SessaoVotacaoDTO);
+        return new ResponseEntity<>(sessao, new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("/sessoes")
