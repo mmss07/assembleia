@@ -76,8 +76,11 @@ public class SessaoVotacaoService {
             final var sessao = modelMapper.map(byId.get(), SessaoVotacaoResponseDTO.class);
             var totalVotosSim = votoSessaoService.getTotalVotosByIdSessaoSIM(sessao.getIdSessaoVotacao());
             var totalVotosNao = votoSessaoService.getTotalVotosByIdSessaoNAO(sessao.getIdSessaoVotacao());
+            sessao.setDataHoraAbertura(byId.get().getDataHoraAbertura().format(formatter).toString());
+            sessao.setDataHoraFechamento(byId.get().getDataHoraFechamento().format(formatter).toString());
             sessao.setTotalVotosSim(totalVotosSim);
             sessao.setTotalVotosNao(totalVotosNao);
+            return sessao;
         }
 
         return SessaoVotacaoResponseDTO.builder().build();
