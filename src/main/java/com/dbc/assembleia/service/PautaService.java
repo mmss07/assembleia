@@ -33,11 +33,10 @@ public class PautaService {
 
     public List<PautaResponseDTO> getPautas() {
         log.info("PautaService ::  getPautas");
-        final var pautas = pautaRepository.findAll().stream().map(x -> {
+        return pautaRepository.findAll().stream().map(x -> {
             x.setListSessao(sessaoVotacaoRepository.findByPauta(x));
             return modelMapper.map(x, PautaResponseDTO.class);
         }).collect(Collectors.toList());
-        return pautas;
     }
 
     public PautaResponseDTO getPautaResponseDTO(Long id) {
