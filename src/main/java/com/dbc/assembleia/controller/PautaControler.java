@@ -1,10 +1,12 @@
 package com.dbc.assembleia.controller;
 
 
-import com.dbc.assembleia.controller.doc.PautaControlerDoc;
-import com.dbc.assembleia.dto.PautaDTO;
+import com.dbc.assembleia.dto.PautaRequestDTO;
+import com.dbc.assembleia.dto.PautaResponseDTO;
 import com.dbc.assembleia.models.Pauta;
 import com.dbc.assembleia.service.PautaService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,30 +19,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/dbc/assembleia")
 @AllArgsConstructor
-public class PautaControler implements PautaControlerDoc {
+@Api(value = " Módulo de Pauta")
+public class PautaControler {
 
     private final PautaService pautaService;
 
     @PostMapping("/pauta")
-    public ResponseEntity<Void> novaPauta(@RequestBody PautaDTO pautaDto) {
+    @ApiOperation(value = "Salva uma nova Pauta")
+    public ResponseEntity<Void> savePauta(@RequestBody PautaRequestDTO pautaDto) {
         pautaService.save(pautaDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/pautas")
-    public ResponseEntity<List<Pauta>> getPautas() {
+    @ApiOperation(value = "Retorna todas as Pautas")
+    public ResponseEntity<List<PautaResponseDTO>> getPautas() {
         var pautas = pautaService.getPautas();
         return new ResponseEntity<>(pautas, new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("/pauta/{id}")
-    public ResponseEntity<PautaDTO> Pautas(@PathVariable long id) {
-        var pautaDTO = pautaService.getPautaId(id);
+    @ApiOperation(value = "Retorna uma Pauta única")
+    public ResponseEntity<PautaResponseDTO> getPauta(@PathVariable long id) {
+        var pautaDTO = pautaService.getPautaResponseDTO(id);
         return new ResponseEntity<>(pautaDTO, new HttpHeaders(), HttpStatus.OK);
     }
 

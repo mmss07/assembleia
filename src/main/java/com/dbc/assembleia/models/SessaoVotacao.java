@@ -1,6 +1,5 @@
 package com.dbc.assembleia.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,27 +11,31 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.time.LocalDate;
-import java.util.List;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Builder
-public class Pauta {
+@Entity(name = "sessao_votacao")
+public class SessaoVotacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idPauta;
-    private String nome;
-    private String descricao;
-    private LocalDate dataPauta;
+    private Long idSessaoVotacao;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "pauta", fetch = FetchType.LAZY)
-    private List<SessaoVotacao> listSessao;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_pauta")
+    private Pauta pauta;
+
+    private LocalDateTime dataHoraAbertura;
+
+    private LocalDateTime dataHoraFechamento;
+
+    private Long tempo;
+
 
 }

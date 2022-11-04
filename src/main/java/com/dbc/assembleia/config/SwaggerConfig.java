@@ -16,13 +16,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     @Bean
-    public Docket api() {
+    public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.dbc.assembleia.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.dbc.assembleia"))
                 .paths(PathSelectors.ant("/dbc/assembleia/**"))
                 .build()
-                .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo());
     }
 
@@ -34,7 +33,7 @@ public class SwaggerConfig {
                 .contact(new Contact("Marcelo Mauricio", "https://www.linkedin.com/in/analistadesenvolvedor-marcelomauricio/", "marcelomauricio@hotmail.com"))
                 .termsOfServiceUrl("http://springfox.io")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-                .version("1.0")
+                .version("1.0.1")
                 .build();
     }
 }
